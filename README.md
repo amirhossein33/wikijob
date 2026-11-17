@@ -1,6 +1,6 @@
 # InterviewHub MVP API
 
-Backend MVP for publishing moderated candidate interview experiences and interviewer advice, discovering questions, and viewing privacy-safe SQL reports. The solution targets .NET 10 and SQL Server with EF Core and ASP.NET Core Identity.
+InterviewHub MVP with an ASP.NET Core backend and a Persian RTL React frontend. The API targets .NET 10 and SQL Server with EF Core and ASP.NET Core Identity.
 
 ## Local setup
 
@@ -48,6 +48,8 @@ Reports use physical SQL summary tables refreshed after publication, rejection, 
 
 Build with `dotnet build InterviewHub.slnx`. Run the API on `http://127.0.0.1:5199` and execute the PowerShell integration scripts in `work/test-*.ps1` with `INTERVIEWHUB_TEST_PORT=5199`. These scripts create data in the configured development database and cover auth, both experience types, moderation, catalog, profiles, search, reports, and content flags. `work/test-interviewer-profiles.ps1` and `work/test-content-reports.ps1` currently use port 5199 directly.
 
+For the frontend, follow `frontend/README.md`: install dependencies with `pnpm install`, then run `pnpm dev --host 127.0.0.1`. Vite serves the app at `http://127.0.0.1:5173` and proxies `/api` to the local backend. Frontend checks are `pnpm run typecheck`, `pnpm run lint`, `pnpm run test`, and `pnpm run build`.
+
 ## Current limits
 
-The summary rebuild recalculates all published data; it is suitable for an MVP dataset but should become incremental or background work as volume grows. Near-duplicate question matching remains manual. AI interview practice and analysis, frontend UI, email verification, and production abuse controls are future work.
+The summary rebuild recalculates all published data; it is suitable for an MVP dataset but should become incremental or background work as volume grows. Near-duplicate question matching remains manual. AI interview practice and analysis, email verification, and production abuse controls are future work. The frontend reflects missing API capabilities instead of simulating them; see `docs/frontend-progress.md`.
