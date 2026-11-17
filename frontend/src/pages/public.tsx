@@ -20,7 +20,7 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
   const rating = item.kind === 'candidate' ? item.interviewerConductRating : item.interviewRating
   return <Link className="experience-card" to={`/experiences/${item.kind}/${item.id}`}>
     <div className="card-top"><span className="card-icon">{item.kind === 'candidate' ? <Layers3 size={21} /> : <Users size={21} />}</span><span className="pill">{kind}</span></div>
-    <h3>{item.companyName || 'شرکت پنهان'}</h3><p className="card-summary">{item.kind === 'candidate' ? 'روایت مرحله‌به‌مرحله از یک مصاحبهٔ واقعی' : 'تجربه و ارزیابی یک مصاحبه از نگاه مصاحبه‌کننده'}</p>
+    <h3>{item.companyName || 'شرکت پنهان'}</h3><p className="card-summary">{item.summary?.trim() || (item.kind === 'candidate' ? 'جزئیات مراحل و سؤال‌های مصاحبه را بخوانید.' : 'دیدگاه مصاحبه‌کننده دربارهٔ روند ارزیابی را بخوانید.')}</p>
     <div className="card-tags"><span>{levelLabel[item.level]}</span><span>{formatDate(item.interviewDate)}</span>{rating && <span><Star size={13} fill="currentColor" /> {digits(rating)} از ۵</span>}</div>
     <div className="card-bottom"><span>{item.authorName || 'ناشناس'}</span><span className="read-more">خواندن تجربه <ArrowLeft size={15} /></span></div>
   </Link>

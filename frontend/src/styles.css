@@ -9,3 +9,5 @@
 .admin-preview{margin-top:18px}.inline-link{border:0;background:transparent;color:#15865b;padding:0;text-align:right;font-size:.78rem;font-weight:700}.inline-link:hover{text-decoration:underline}
 .private-summary{text-align:right;margin:22px 0;border-top:1px solid var(--line);padding-top:18px;font-size:.86rem}.private-summary section{border-top:1px solid var(--line);padding-top:13px;margin-top:13px}.private-summary h2{font-size:1rem}
 .popular-tags{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:28px}.popular-tags strong{font-size:.86rem;color:#4f6955;margin-inline-end:5px}.popular-tags a{background:#e7f4e9;color:#167d57;padding:6px 11px;border-radius:40px;font-size:.78rem;font-weight:700}.popular-tags a:hover{background:#d0ead6}
+/* Keep long interview excerpts readable without changing the card grid height. */
+.experience-card .card-summary{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}

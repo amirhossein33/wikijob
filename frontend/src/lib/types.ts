@@ -14,7 +14,7 @@ export interface Question { id: string; text: string; type: QuestionType; isRefe
 export interface ExperienceItem {
   id: string; kind: 'candidate' | 'interviewer'; interviewDate: string; level: Level;
   authorName: string | null; companyName: string | null; interviewRating: number | null;
-  interviewerConductRating: number | null; jobAdAlignmentRating: number | null
+  interviewerConductRating: number | null; jobAdAlignmentRating: number | null; summary: string | null
 }
 export interface StageQuestion { questionId: string; text: string; type: QuestionType; perceivedDifficulty: number | null }
 export interface Stage { id: string; order: number; type: StageType; date: string; description: string; questions: StageQuestion[] }

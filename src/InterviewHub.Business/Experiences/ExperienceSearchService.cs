@@ -11,7 +11,8 @@ public sealed record ExperienceSearchFilter(Guid? CompanyId, ExperienceLevel? Le
 // List DTO has only public fields; hidden company and author values are projected as null.
 public sealed record ExperienceListItem(Guid Id, string Kind, DateOnly InterviewDate,
     ExperienceLevel Level, string? AuthorName, string? CompanyName,
-    byte? InterviewRating, byte? InterviewerConductRating, byte? JobAdAlignmentRating);
+    byte? InterviewRating, byte? InterviewerConductRating, byte? JobAdAlignmentRating,
+    string? Summary);
 public sealed record ExperienceSearchResponse(int Page, int PageSize, int TotalCount,
     IReadOnlyList<ExperienceListItem> Items);
 public sealed record CompanyListItem(Guid Id, string Name);
@@ -62,12 +63,12 @@ public sealed class ExperienceSearchService(InterviewHubDbContext db)
         var candidateItems = await candidate.OrderByDescending(x => x.InterviewDate).ThenByDescending(x => x.CreatedAt)
             .Take(maxNeeded).Select(x => new ExperienceListItem(x.Id, "candidate", x.InterviewDate, x.Level,
                 x.IsAuthorAnonymous ? null : x.Author.UserName, x.Company != null ? x.Company.Name : null,
-                null, x.InterviewerConductRating, x.JobAdAlignmentRating)).ToListAsync(ct);
+                null, x.InterviewerConductRating, x.JobAdAlignmentRating, x.Description)).ToListAsync(ct);
         var interviewerItems = await interviewer.OrderByDescending(x => x.InterviewDate).ThenByDescending(x => x.CreatedAt)
             .Take(maxNeeded).Select(x => new ExperienceListItem(x.Id, "interviewer", x.InterviewDate, x.Level,
                 x.ShowInterviewerName ? x.InterviewerName : null,
                 x.ShowCompanyName ? x.Company.Name : null,
-                x.InterviewRating, null, null)).ToListAsync(ct);
+                x.InterviewRating, null, null, x.Description)).ToListAsync(ct);
         var items = candidateItems.Concat(interviewerItems).OrderByDescending(x => x.InterviewDate)
             .ThenBy(x => x.Kind).ThenBy(x => x.Id)
             .Skip((filter.Page - 1) * filter.PageSize).Take(filter.PageSize).ToArray();
