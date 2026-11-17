@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/InterviewHub.Api/InterviewHub.Api.csproj" />
+    <Project Path="src/InterviewHub.Business/InterviewHub.Business.csproj" />
+    <Project Path="src/InterviewHub.Data/InterviewHub.Data.csproj" />
+  </Folder>
+</Solution>

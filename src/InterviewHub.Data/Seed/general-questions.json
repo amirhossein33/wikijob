@@ -1,0 +1,702 @@
+[
+  {
+    "text": "در ASP.NET Core، تفاوت بین Middleware و Filter چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان یک Dependency را در ASP.NET Core تزریق کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "هدف از استفاده از IConfiguration در ASP.NET Core چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "چه زمانی از Attribute Routing در ASP.NET Core استفاده می‌شود و چه مزیتی دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "برای پیاده‌سازی احراز هویت مبتنی بر JWT در ASP.NET Core چه مراحلی باید طی شود؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان از Health Check در ASP.NET Core برای مانیتورینگ سرویس استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "فرض کنید برنامه شما دچار Memory Leak در ASP.NET Core شده است، چه راهکارهایی برای شناسایی و رفع آن پیشنهاد می‌کنید؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "در زبان C#، تفاوت بین کلاس‌های abstract و interface چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "کاربرد کلمه کلیدی var در C# چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "تفاوت بین Value Type و Reference Type در C# چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در C# چگونه می‌توان از LINQ برای فیلتر کردن یک لیست استفاده کرد؟ یک مثال بنویسید.",
+    "type": "LiveCode",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "تفاوت بین Task و Thread در C# چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در چه مواقعی از async/await در C# استفاده می‌شود؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "فرض کنید باید یک سیستم کش داخلی با قابلیت انقضا در C# پیاده‌سازی کنید، چگونه این کار را انجام می‌دهید؟",
+    "type": "LiveCode",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در صورت بروز Deadlock در برنامه C#، چگونه آن را شناسایی و رفع می‌کنید؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در Entity Framework، تفاوت بین DbSet و DbContext چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "مفهوم Migration در Entity Framework چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان یک رابطه‌ی One-to-Many در Entity Framework تعریف کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در چه شرایطی باید از AsNoTracking در EF استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "تفاوت بین Eager Loading و Lazy Loading در EF چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در صورت بروز خطای Concurrency در EF، چه راهکاری پیشنهاد می‌دهید؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان EF را برای کار با دیتابیس‌های بزرگ و تراکنش‌های سنگین بهینه کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در معماری نرم‌افزار، تفاوت بین Monolithic و Microservices چیست؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "هدف اصلی استفاده از لایه‌بندی (Layered Architecture) در طراحی نرم‌افزار چیست؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "مدل Repository چه کاربردی در معماری نرم‌افزار دارد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در چه شرایطی استفاده از CORS توصیه می‌شود؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "تفاوت بین Dependency Injection و Service Locator چیست؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در معماری Clean Architecture، هر لایه چه مسئولیتی دارد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در صورت بروز مشکل در هماهنگی بین سرویس‌های Microservices، چه راهکاری پیشنهاد می‌دهید؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در SQL Server، تفاوت بین Clustered و Non-Clustered Index چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "SQL Server"
+    ]
+  },
+  {
+    "text": "هدف از استفاده از Stored Procedure در SQL Server چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "SQL Server"
+    ]
+  },
+  {
+    "text": "تفاوت بین Mock و Stub در تست چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "Testing"
+    ]
+  },
+  {
+    "text": "در امنیت برنامه‌های تحت وب، هدف از استفاده از HTTPS چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "Security"
+    ]
+  },
+  {
+    "text": "تفاوت بین Authentication و Authorization چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "Security"
+    ]
+  },
+  {
+    "text": "در بهینه‌سازی عملکرد برنامه، تفاوت بین Caching و Buffering چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "Performance"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان Bottleneck را در یک برنامه .NET شناسایی کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "Performance"
+    ]
+  },
+  {
+    "text": "تفاوت بین appsettings.json و appsettings.Development.json چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "چه زمانی باید از IHostedService در ASP.NET Core استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان CORS (Cross-Origin Resource Sharing) را در ASP.NET Core مدیریت کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "در یک پروژه بزرگ، چگونه می‌توان ساختار ماژولار و قابل توسعه برای Middlewareها ایجاد کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "در زبان C#، تفاوت بین struct و class چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در چه مواقعی باید از Event در C# استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان یک سیستم پلاگین داینامیک با استفاده از ویژگی‌های C# پیاده‌سازی کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان یک Transaction را در EF Core مدیریت کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در پروژه‌های بزرگ، چگونه می‌توان عملکرد Queryها را در EF Core بهینه کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "Dependency Injection چه مزیتی در معماری نرم‌افزار دارد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در چه شرایطی باید از الگوی Unit of Work استفاده کرد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در SQL Server، تفاوت بین Primary Key و Unique Key چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "SQL Server"
+    ]
+  },
+  {
+    "text": "برای بهینه‌سازی عملکرد Queryها در SQL Server چه راهکارهایی وجود دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "SQL Server"
+    ]
+  },
+  {
+    "text": "چه زمانی باید از Integration Test به‌جای Unit Test استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "Testing"
+    ]
+  },
+  {
+    "text": "برای جلوگیری از حملات XSS در برنامه‌های تحت وب چه راهکاری وجود دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "Security"
+    ]
+  },
+  {
+    "text": "تفاوت بین app.Use و app.Run در پیکربندی Middleware چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "کلمات کلیدی async و await چه کاربردی دارند و در چه مواقعی استفاده می‌شوند؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در چه شرایطی باید از struct به جای class در C# استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "Lambda Expression در C# چیست و چه مزایایی دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "فرض کنید نیاز به پیاده‌سازی یک Singleton Thread-Safe در C# دارید. چگونه این کار را انجام می‌دهید؟",
+    "type": "LiveCode",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در یک سیستم بزرگ، چگونه می‌توان از الگوی Event Sourcing با C# استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "کلمه کلیدی Include در Entity Framework چه کاربردی دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در EF Core، تفاوت بین Migration و Seed Data چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در پروژه‌هایی با داده‌های حجیم، چه راهکارهایی برای بهبود Performance در EF پیشنهاد می‌کنید؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "چگونه می‌توان Domain-Driven Design (DDD) را در EF پیاده‌سازی کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در یک پروژه بزرگ، چگونه می‌توان Dependency Injection را مدیریت کرد تا پیچیدگی افزایش نیابد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در معماری Microservices، چه چالش‌هایی برای مدیریت Transaction وجود دارد و چه راهکارهایی پیشنهاد می‌شود؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در سناریوی High Availability برای SQL Server چه راهکارهایی وجود دارد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "SQL Server"
+    ]
+  },
+  {
+    "text": "برای تست یک سرویس خارجی در پروژه .NET چه روشی پیشنهاد می‌دهید؟",
+    "type": "Conceptual",
+    "tags": [
+      "Testing"
+    ]
+  },
+  {
+    "text": "در پروژه‌های .NET چگونه می‌توان اطلاعات حساس مانند Connection String را امن نگه داشت؟",
+    "type": "Conceptual",
+    "tags": [
+      "Security"
+    ]
+  },
+  {
+    "text": "در چه شرایطی باید از Memory Cache و در چه شرایطی از Distributed Cache استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "Performance"
+    ]
+  },
+  {
+    "text": "در یک سناریوی واقعی، چه زمانی استفاده از async/await در C# می‌تواند باعث بهبود کارایی شود و چه محدودیت‌هایی دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در یک پروژه بزرگ، چگونه می‌توان با استفاده از Reflection در C# قابلیت افزونه‌ای یا پویا ایجاد کرد و چه ریسک‌هایی دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "تفاوت بین event و delegate در C# چیست و چه زمانی باید از هر کدام استفاده کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در چه شرایطی استفاده از ValueTuple در C# نسبت به کلاس معمولی مناسب‌تر است؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در یک سیستم ماژولار، چگونه می‌توان با استفاده از Generics در C# وابستگی‌ها را کاهش داد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در چه شرایطی استفاده از unsafe code در C# منطقی است و چه ملاحظات امنیتی باید رعایت شود؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "Pattern Matching در C# چه مزایایی نسبت به روش‌های سنتی دارد و در چه سناریوهایی استفاده می‌شود؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در یک پروژه با حجم بالای داده، چگونه می‌توان با استفاده از LINQ در C# کارایی را بهینه کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در Entity Framework، تفاوت بین روش Database First و Code First چیست و هر کدام چه مزایا و معایبی دارند؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در یک پروژه با چندین جدول مرتبط، چگونه می‌توان با استفاده از EF عملکرد Queryها را بهینه کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در چه شرایطی استفاده از Migration در EF می‌تواند باعث بروز مشکل شود و چه راهکارهایی برای مدیریت آن وجود دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در EF چه تفاوتی بین Lazy Loading، Eager Loading و Explicit Loading وجود دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در یک پروژه با داده‌های حساس، چگونه می‌توان امنیت داده‌ها را در EF تضمین کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در سناریوی کار با داده‌های حجیم، چگونه می‌توان با استفاده از EF حافظه و کارایی را مدیریت کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در زمان استفاده از Transaction در EF، چه نکاتی برای جلوگیری از بروز خطاهای همزمانی باید رعایت شود؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در معماری نرم‌افزار، تفاوت بین Monolithic و Microservices چیست و هر کدام چه مزایا و معایبی دارند؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در طراحی یک سیستم توزیع‌شده، چه عواملی برای افزایش قابلیت اطمینان باید در نظر گرفته شود؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در یک تیم توسعه، چگونه می‌توان با استفاده از DDD پیچیدگی دامنه را مدیریت کرد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در طراحی API، چه عواملی برای افزایش قابلیت استفاده مجدد باید رعایت شود؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در پروژه‌های با تیم‌های متعدد، چگونه می‌توان با استفاده از معماری لایه‌ای از تداخل و وابستگی جلوگیری کرد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در یک پروژه با ترافیک بالا، چگونه می‌توان با استفاده از Load Balancer کارایی و پایداری را افزایش داد؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Performance"
+    ]
+  },
+  {
+    "text": "در زمان بروز Bottleneck در سیستم، چه مراحلی برای شناسایی و رفع آن باید طی شود؟",
+    "type": "Conceptual",
+    "tags": [
+      "Performance"
+    ]
+  },
+  {
+    "text": "تفاوت بین Scoped، Singleton و Transient در سرویس‌های ASP.NET Core چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "در پروژه‌های با چندین محیط (Development, Staging, Production)، چگونه مدیریت تنظیمات (Configuration) در ASP.NET Core انجام می‌شود؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "در چه شرایطی استفاده از Minimal APIs نسبت به Controller-based APIs در ASP.NET Core مناسب‌تر است؟",
+    "type": "Conceptual",
+    "tags": [
+      "ASP.NET Core"
+    ]
+  },
+  {
+    "text": "در پروژه‌های با چندین Thread، چگونه می‌توان از Race Condition جلوگیری کرد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "تفاوت بین IEnumerable و IQueryable در C# چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در پروژه‌هایی که نیاز به پردازش موازی دارند، چه تفاوتی بین Parallel.ForEach و Task.WhenAll وجود دارد؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در چه شرایطی استفاده از Reflection در C# می‌تواند به Performance آسیب بزند؟",
+    "type": "Conceptual",
+    "tags": [
+      "C#"
+    ]
+  },
+  {
+    "text": "در EF Core، تفاوت بین روش Eager Loading و Explicit Loading چیست؟",
+    "type": "Conceptual",
+    "tags": [
+      "EF Core"
+    ]
+  },
+  {
+    "text": "در یک پروژه بزرگ، چه زمانی استفاده از CQRS توصیه می‌شود و چه مشکلاتی ممکن است ایجاد کند؟",
+    "type": "SystemDesign",
+    "tags": [
+      "Architecture"
+    ]
+  },
+  {
+    "text": "در پروژه‌های با نیاز به احراز هویت چندسطحی، چه راهکارهایی برای مدیریت Tokenها و امنیت آن‌ها پیشنهاد می‌دهید؟",
+    "type": "Conceptual",
+    "tags": [
+      "Security"
+    ]
+  },
+  {
+    "text": "اگر نیاز به پیاده‌سازی یک الگوریتم مرتب‌سازی سفارشی در C# دارید، چه روشی پیشنهاد می‌کنید؟",
+    "type": "Algorithm",
+    "tags": [
+      "C#"
+    ]
+  }
+]
