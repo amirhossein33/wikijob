@@ -19,18 +19,18 @@ public sealed class AuthController(UserManager<AppUser> users, ITokenService tok
     public async Task<ActionResult<TokenResponse>> Register(RegisterRequest request)
     {
         if (request.Role is not (AppRoles.Candidate or AppRoles.Interviewer))
-            return BadRequest(new { error = "Role must be Candidate or Interviewer." });
+            return BadRequest(new { error = "نقش باید مصاحبه‌شونده یا مصاحبه‌کننده باشد." });
 
         var user = new AppUser { UserName = request.UserName, Email = request.Email };
         var result = await users.CreateAsync(user, request.Password);
         if (!result.Succeeded)
-            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
+            return BadRequest(new { error = "ثبت‌نام انجام نشد. نام کاربری، ایمیل یا رمز عبور را بررسی کنید.", errors = result.Errors.Select(e => e.Description) });
 
         var roleResult = await users.AddToRoleAsync(user, request.Role);
         if (!roleResult.Succeeded)
         {
             await users.DeleteAsync(user);
-            return StatusCode(500, new { error = "Could not assign account role." });
+            return StatusCode(500, new { error = "تخصیص نقش حساب انجام نشد. دوباره تلاش کنید." });
         }
 
         return Ok(tokens.Create(user, [request.Role]));
@@ -47,7 +47,7 @@ public sealed class AuthController(UserManager<AppUser> users, ITokenService tok
             : await users.FindByNameAsync(request.UserNameOrEmail);
 
         if (user is null || !await users.CheckPasswordAsync(user, request.Password))
-            return Unauthorized(new { error = "Invalid credentials." });
+            return Unauthorized(new { error = "نام کاربری یا رمز عبور درست نیست." });
 
         var roles = await users.GetRolesAsync(user);
         return Ok(tokens.Create(user, roles.ToArray()));
@@ -59,13 +59,13 @@ public sealed class AuthController(UserManager<AppUser> users, ITokenService tok
     public async Task<IActionResult> AddMemberRole(string role)
     {
         if (role is not (AppRoles.Candidate or AppRoles.Interviewer))
-            return BadRequest(new { error = "Role must be Candidate or Interviewer." });
+            return BadRequest(new { error = "نقش باید مصاحبه‌شونده یا مصاحبه‌کننده باشد." });
 
         var user = await users.GetUserAsync(User);
         if (user is null) return Unauthorized();
         if (await users.IsInRoleAsync(user, role)) return NoContent();
         var result = await users.AddToRoleAsync(user, role);
-        return result.Succeeded ? NoContent() : BadRequest(new { errors = result.Errors.Select(e => e.Description) });
+        return result.Succeeded ? NoContent() : BadRequest(new { error = "افزودن نقش انجام نشد.", errors = result.Errors.Select(e => e.Description) });
     }
 
     // Current roles are read from Identity because a token may predate a role change.

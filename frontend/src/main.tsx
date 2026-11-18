@@ -39,6 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Route index element={<Home />} />
     <Route path="experiences" element={<Experiences />} />
     <Route path="experiences/new" element={<RequireAuth><SubmitExperience /></RequireAuth>} />
+    <Route path="dashboard/submission/candidate/:id/edit" element={<RequireAuth role="Candidate"><SubmitExperience /></RequireAuth>} />
     <Route path="experiences/:kind/:id" element={<ExperienceDetail />} />
     <Route path="companies" element={<Companies />} />
     <Route path="companies/:id" element={<CompanyDetail />} />
@@ -50,6 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Route path="dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
     <Route path="dashboard/submission/:kind/:id" element={<RequireAuth><SubmissionReceipt /></RequireAuth>} />
     <Route path="interviewer/new" element={<RequireAuth role="Interviewer"><SubmitInterviewer /></RequireAuth>} />
+    <Route path="interviewer/:id/edit" element={<RequireAuth role="Interviewer"><SubmitInterviewer /></RequireAuth>} />
     <Route path="interviewer/profile" element={<RequireAuth role="Interviewer"><InterviewerProfileEditor /></RequireAuth>} />
     <Route path="admin" element={<RequireAuth role="Admin"><AdminDashboard /></RequireAuth>} />
     <Route path="privacy" element={<PrivacyDraft />} />

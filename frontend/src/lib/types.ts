@@ -56,3 +56,8 @@ export interface CandidateInput {
   stages: { type: StageType; date: string; description: string;
     questions: { questionId?: string; text?: string; type: QuestionType; perceivedDifficulty?: number }[] }[]
 }
+export interface InterviewerInput {
+  interviewerName: string; companyName: string; showInterviewerName: boolean; showCompanyName: boolean;
+  interviewDate: string; level: Exclude<Level, 'Unknown'>; description: string; jobAdText?: string; jobAdUrl?: string;
+  interviewRating: number; questions: { text: string; type: QuestionType }[]
+}

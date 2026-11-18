@@ -42,4 +42,33 @@ public sealed class InterviewerExperiencesController(InterviewerExperienceServic
         return result is null ? NotFound() : Ok(result);
     }
 
+    // The interviewer dashboard receives private records, including moderation status.
+    [HttpGet("mine")]
+    [Authorize(Roles = AppRoles.Interviewer + "," + AppRoles.Admin)]
+    public async Task<ActionResult<IReadOnlyList<PrivateInterviewerExperienceResponse>>> Mine(CancellationToken ct)
+    {
+        var authorId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return Ok(await service.MineAsync(authorId, ct));
+    }
+
+    // Full replacement returns edited content to the admin review queue.
+    [HttpPut("{id:guid}/mine")]
+    [Authorize(Roles = AppRoles.Interviewer)]
+    public async Task<ActionResult<PrivateInterviewerExperienceResponse>> UpdateMine(
+        Guid id, CreateInterviewerExperienceRequest request, CancellationToken ct)
+    {
+        var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var item = await service.UpdateAsync(id, requesterId, false, request, ct);
+        return item is null ? NotFound() : Ok(item);
+    }
+
+    // Soft delete preserves moderation history while hiding the record from public endpoints.
+    [HttpDelete("{id:guid}/mine")]
+    [Authorize(Roles = AppRoles.Interviewer)]
+    public async Task<IActionResult> DeleteMine(Guid id, CancellationToken ct)
+    {
+        var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return await service.DeleteMineAsync(id, requesterId, ct) ? NoContent() : NotFound();
+    }
+
 }

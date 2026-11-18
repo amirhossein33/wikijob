@@ -18,4 +18,5 @@ export default [
     },
   },
   { files: ['src/main.tsx'], rules: { 'react-refresh/only-export-components': 'off' } },
+  { files: ['e2e/**/*.{ts,tsx}', 'playwright.config.ts'], languageOptions: { globals: globals.node } },
 ]

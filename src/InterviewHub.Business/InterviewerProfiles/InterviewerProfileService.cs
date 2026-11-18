@@ -14,7 +14,7 @@ public sealed class InterviewerProfileService(InterviewHubDbContext db, ReportSu
         await using var transaction = await db.Database.BeginTransactionAsync(ct);
         var item = await db.InterviewerProfiles.Include(x => x.Company).Include(x => x.Priorities)
             .SingleOrDefaultAsync(x => x.UserId == userId, ct);
-        if (item?.Status == ModerationStatus.Deleted) return (ProfileSaveResult.Deleted, null);
+        var restoringDeletedProfile = item?.Status == ModerationStatus.Deleted;
         if (item is null)
         {
             item = new InterviewerProfile
@@ -22,6 +22,11 @@ public sealed class InterviewerProfileService(InterviewHubDbContext db, ReportSu
                 UserId = userId, PublicId = Guid.NewGuid(), DisplayName = request.DisplayName.Trim()
             };
             db.InterviewerProfiles.Add(item);
+        }
+        else if (restoringDeletedProfile)
+        {
+            // A fresh opaque URL prevents stale references from becoming valid after owner resubmission.
+            item.PublicId = Guid.NewGuid();
         }
         item.DisplayName = request.DisplayName.Trim();
         item.Company = string.IsNullOrWhiteSpace(request.CompanyName)
@@ -63,6 +68,18 @@ public sealed class InterviewerProfileService(InterviewHubDbContext db, ReportSu
     {
         var item = await Query().SingleOrDefaultAsync(x => x.UserId == userId && x.Status != ModerationStatus.Deleted, ct);
         return item is null ? null : ToPrivate(item);
+    }
+
+    // Owners can remove their advice and priorities without physically deleting the audit record.
+    public async Task<bool> DeleteMineAsync(Guid userId, CancellationToken ct)
+    {
+        var item = await db.InterviewerProfiles.SingleOrDefaultAsync(x => x.UserId == userId, ct);
+        if (item is null || item.Status == ModerationStatus.Deleted) return false;
+        item.Status = ModerationStatus.Deleted;
+        item.UpdatedAt = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync(ct);
+        await reports.RebuildAsync(ct);
+        return true;
     }
 
     public async Task<PublicInterviewerProfileResponse?> GetPublicAsync(Guid publicId, CancellationToken ct)

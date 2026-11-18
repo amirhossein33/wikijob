@@ -33,6 +33,15 @@ public sealed class InterviewerProfilesController(InterviewerProfileService prof
         return profile is null ? NotFound() : Ok(profile);
     }
 
+    // Removing a profile hides the interviewer advice and aggregated priorities.
+    [HttpDelete("me")]
+    [Authorize(Roles = AppRoles.Interviewer)]
+    public async Task<IActionResult> DeleteMine(CancellationToken ct)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return await profiles.DeleteMineAsync(userId, ct) ? NoContent() : NotFound();
+    }
+
     // The opaque public ID avoids exposing the Identity user ID in public profile URLs.
     [HttpGet("{publicId:guid}")]
     [AllowAnonymous]

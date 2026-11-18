@@ -56,14 +56,15 @@ namespace InterviewHub.Data.Migrations
                 nullable: true);
 
             // Backfill any existing profiles before enforcing a unique public ID.
+            // Dynamic SQL compiles after the new PublicId column exists in this batch.
             migrationBuilder.Sql("""
-                UPDATE p
-                SET p.PublicId = NEWID(),
-                    p.DisplayName = COALESCE(NULLIF(u.UserName, ''), 'Interviewer'),
-                    p.Status = 'Pending',
-                    p.UpdatedAt = TODATETIMEOFFSET(SYSUTCDATETIME(), '+00:00')
-                FROM InterviewerProfiles AS p
-                INNER JOIN Users AS u ON u.Id = p.UserId;
+                EXEC(N'UPDATE p
+                    SET p.PublicId = NEWID(),
+                        p.DisplayName = COALESCE(NULLIF(u.UserName, ''''), ''Interviewer''),
+                        p.Status = ''Pending'',
+                        p.UpdatedAt = TODATETIMEOFFSET(SYSUTCDATETIME(), ''+00:00'')
+                    FROM InterviewerProfiles AS p
+                    INNER JOIN Users AS u ON u.Id = p.UserId;');
                 """);
 
             migrationBuilder.CreateIndex(

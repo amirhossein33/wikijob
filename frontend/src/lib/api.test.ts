@@ -21,6 +21,10 @@ describe('API boundary', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}', { status })))
     await expect(request('/api/auth/me')).rejects.toMatchObject({ status, message: expect.stringMatching(/[\u0600-\u06ff]/) } satisfies Partial<ApiError>)
   })
+  it('shows the server error payload instead of only the status code', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: 'نام کاربری یا رمز عبور نادرست است.' }), { status: 401 })))
+    await expect(request('/api/auth/login')).rejects.toMatchObject({ status: 401, message: 'نام کاربری یا رمز عبور نادرست است.' })
+  })
   it('rejects unsafe external job-ad links', () => {
     expect(safeExternalUrl('javascript:alert(1)')).toBeNull()
     expect(safeExternalUrl('https://example.com/job')).toBe('https://example.com/job')

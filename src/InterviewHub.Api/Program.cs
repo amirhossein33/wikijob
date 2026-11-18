@@ -13,6 +13,7 @@ using InterviewHub.Data.Entities;
 using InterviewHub.Data.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -88,9 +89,44 @@ builder.Services.AddScoped<InterviewerProfileService>();
 // String enums keep request and response values readable for React clients.
 builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
     options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
-builder.Services.AddControllers();
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+{
+    // Model validation returns a readable payload that the UI can display.
+    options.InvalidModelStateResponseFactory = context =>
+        new BadRequestObjectResult(new
+        {
+            error = "اطلاعات واردشده معتبر نیست. فیلدهای مشخص‌شده را بررسی کنید.",
+            errors = context.ModelState.Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(x => x.Key, x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray())
+        });
+});
 
 var app = builder.Build();
+
+// Unexpected failures get a safe JSON message; internal exception details stay in server logs.
+app.UseExceptionHandler(handler => handler.Run(async context =>
+{
+    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+    await context.Response.WriteAsJsonAsync(new { error = "خطایی در سرور رخ داد. کمی بعد دوباره تلاش کنید." });
+}));
+// Controllers and authorization sometimes return an empty status response.
+app.UseStatusCodePages(async statusContext =>
+{
+    var response = statusContext.HttpContext.Response;
+    if (!statusContext.HttpContext.Request.Path.StartsWithSegments("/api") ||
+        response.ContentLength is > 0 || !string.IsNullOrEmpty(response.ContentType)) return;
+    var message = response.StatusCode switch
+    {
+        400 => "درخواست معتبر نیست. اطلاعات را بررسی کنید.",
+        401 => "برای ادامه وارد حساب شوید.",
+        403 => "دسترسی لازم برای این بخش را ندارید.",
+        404 => "مورد درخواستی پیدا نشد.",
+        429 => "تعداد درخواست‌ها زیاد است. کمی بعد دوباره تلاش کنید.",
+        500 => "خطایی در سرور رخ داد. کمی بعد دوباره تلاش کنید.",
+        _ => "درخواست انجام نشد. دوباره تلاش کنید."
+    };
+    await response.WriteAsJsonAsync(new { error = message });
+});
 
 await IdentityBootstrapper.InitializeAsync(app.Services, app.Configuration);
 // Seed only the General reference collection after the schema has been migrated.
@@ -102,7 +138,11 @@ using (var scope = app.Services.CreateScope())
     await scope.ServiceProvider.GetRequiredService<ReportSummaryService>().RebuildAsync(CancellationToken.None);
 }
 
-app.UseHttpsRedirection();
+// The free host enables HTTPS only after the first upload and support activation.
+if (app.Configuration.GetValue("Hosting:EnableHttpsRedirection", true))
+    app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseCors("Frontend");
 
 // Authentication must run before role authorization to distinguish 401 from 403.
@@ -115,5 +155,18 @@ app.MapControllers();
 app.MapGet("/health", async (InterviewHubDbContext db, CancellationToken ct) =>
     await db.Database.CanConnectAsync(ct) ? Results.Ok(new { status = "healthy" })
         : Results.StatusCode(StatusCodes.Status503ServiceUnavailable));
+
+// Serve React routes from the same origin while keeping unknown API paths as 404.
+var spaEntry = Path.Combine(app.Environment.WebRootPath ?? "", "index.html");
+if (File.Exists(spaEntry))
+    app.MapFallback(async context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api") || context.Request.Path.StartsWithSegments("/health"))
+        {
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            return;
+        }
+        await context.Response.SendFileAsync(spaEntry);
+    });
 
 app.Run();

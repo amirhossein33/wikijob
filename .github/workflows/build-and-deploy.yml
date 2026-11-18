@@ -1,0 +1,244 @@
+name: Verify and deploy InterviewHub
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Keep repository access read-only; deployment credentials come from Actions secrets.
+permissions:
+  contents: read
+
+concurrency:
+  group: interviewhub-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Build and run API/UI end-to-end tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      sql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: E2E!StrongPassword_2026
+        ports:
+          - 1433:1433
+
+    # These credentials and this database exist only on an ephemeral CI runner.
+    env:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=127.0.0.1,1433;Database=InterviewHubE2E;User Id=sa;Password=E2E!StrongPassword_2026;Encrypt=False;TrustServerCertificate=True"
+      Jwt__Issuer: InterviewHubE2E
+      Jwt__Audience: InterviewHubE2E
+      Jwt__SigningKey: InterviewHubE2ETestOnlySigningKey-2026-AtLeast32Chars
+      Jwt__LifetimeMinutes: 30
+      Admin__UserName: e2e-admin
+      Admin__Password: E2EAdmin!4826
+      E2E_ADMIN_USERNAME: e2e-admin
+      E2E_ADMIN_PASSWORD: E2EAdmin!4826
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Restore and build .NET solution
+        run: |
+          dotnet restore InterviewHub.slnx
+          dotnet build InterviewHub.slnx --configuration Release --no-restore
+
+      - name: Install frontend dependencies
+        run: pnpm --dir frontend install --frozen-lockfile
+
+      - name: Lint frontend
+        run: pnpm --dir frontend run lint
+
+      - name: Run frontend unit tests
+        run: pnpm --dir frontend test
+
+      - name: Install EF Core CLI
+        run: |
+          dotnet tool install --global dotnet-ef --version 10.0.14
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: Wait for the disposable SQL Server
+        shell: bash
+        run: |
+          for attempt in {1..30}; do
+            if bash -c '</dev/tcp/127.0.0.1/1433' 2>/dev/null; then exit 0; fi
+            sleep 2
+          done
+          echo 'SQL Server did not open port 1433 in time.' >&2
+          exit 1
+
+      - name: Apply reviewed migrations to the disposable test database
+        shell: bash
+        run: |
+          for attempt in {1..12}; do
+            if dotnet ef database update \
+              --project src/InterviewHub.Data/InterviewHub.Data.csproj \
+              --startup-project src/InterviewHub.Api/InterviewHub.Api.csproj \
+              --configuration Release --no-build; then exit 0; fi
+            sleep 5
+          done
+          echo 'EF Core could not initialize the disposable test database.' >&2
+          exit 1
+
+      - name: Provision disposable Admin credentials for API acceptance
+        shell: bash
+        run: |
+          dotnet user-secrets set "Admin:UserName" "$Admin__UserName" --project src/InterviewHub.Api/InterviewHub.Api.csproj
+          dotnet user-secrets set "Admin:Password" "$Admin__Password" --project src/InterviewHub.Api/InterviewHub.Api.csproj
+
+      - name: Start the API for backend acceptance and browser E2E
+        shell: bash
+        run: |
+          nohup dotnet run --project src/InterviewHub.Api/InterviewHub.Api.csproj \
+            --configuration Release --no-build --urls http://127.0.0.1:5199 \
+            > "$RUNNER_TEMP/interviewhub-api.log" 2>&1 &
+          echo "$!" > "$RUNNER_TEMP/interviewhub-api.pid"
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:5199/health >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          tail -n 100 "$RUNNER_TEMP/interviewhub-api.log"
+          echo 'The API did not become healthy in time.' >&2
+          exit 1
+
+      - name: Run backend ownership and moderation acceptance tests
+        shell: pwsh
+        env:
+          INTERVIEWHUB_TEST_PORT: 5199
+        run: ./work/test-owner-management.ps1
+
+      - name: Install Chromium for Playwright
+        run: pnpm --dir frontend exec playwright install --with-deps chromium
+
+      - name: Run browser E2E scenarios against the real API and SQL Server
+        env:
+          E2E_API_ALREADY_RUNNING: "true"
+        run: pnpm --dir frontend run test:e2e
+
+      - name: Upload E2E traces and HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: interviewhub-e2e-report
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          if-no-files-found: warn
+          retention-days: 7
+
+  deploy:
+    name: Publish to MonsterASP.NET
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Restore and build .NET solution
+        run: |
+          dotnet restore InterviewHub.slnx
+          dotnet build InterviewHub.slnx --configuration Release --no-restore
+
+      - name: Install frontend dependencies
+        run: pnpm --dir frontend install --frozen-lockfile
+
+      # The packaging script builds React, publishes the API, and combines them under wwwroot.
+      - name: Build the deployable site package
+        shell: pwsh
+        run: ./work/package-host.ps1
+
+      # A missing secret skips deployment but still leaves CI results available.
+      - name: Check deployment configuration
+        id: deployment
+        shell: pwsh
+        env:
+          WEBSITE_NAME: ${{ secrets.MONSTERASP_WEBSITE_NAME }}
+          SERVER_COMPUTER_NAME: ${{ secrets.MONSTERASP_SERVER_COMPUTER_NAME }}
+          SERVER_USERNAME: ${{ secrets.MONSTERASP_SERVER_USERNAME }}
+          SERVER_PASSWORD: ${{ secrets.MONSTERASP_SERVER_PASSWORD }}
+        run: |
+          $required = @($env:WEBSITE_NAME, $env:SERVER_COMPUTER_NAME, $env:SERVER_USERNAME, $env:SERVER_PASSWORD)
+          if ($required | Where-Object { [string]::IsNullOrWhiteSpace($_) }) {
+            "configured=false" >> $env:GITHUB_OUTPUT
+            Write-Warning 'Deploy skipped. Add the four MONSTERASP_* repository secrets to enable it.'
+            exit 0
+          }
+          "configured=true" >> $env:GITHUB_OUTPUT
+
+      # Web Deploy targets the website root and keeps existing untracked files.
+      - name: Deploy to MonsterASP.NET
+        if: steps.deployment.outputs.configured == 'true'
+        uses: rasmusbuchholdt/simply-web-deploy@2.2.0
+        with:
+          website-name: ${{ secrets.MONSTERASP_WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.MONSTERASP_SERVER_COMPUTER_NAME }}
+          server-username: ${{ secrets.MONSTERASP_SERVER_USERNAME }}
+          server-password: ${{ secrets.MONSTERASP_SERVER_PASSWORD }}
+          source-path: '.\outputs\hosting\publish\'
+          target-delete: false
+
+      # Smoke-check the live health endpoint only after an actual deployment.
+      - name: Smoke-check deployed API
+        if: steps.deployment.outputs.configured == 'true'
+        shell: pwsh
+        run: |
+          $uri = 'http://karnama.runasp.net/health'
+          for ($attempt = 1; $attempt -le 8; $attempt++) {
+            try {
+              $response = Invoke-WebRequest -Uri $uri -TimeoutSec 20
+              if ([int]$response.StatusCode -eq 200) {
+                Write-Output 'Health endpoint returned 200.'
+                exit 0
+              }
+            }
+            catch {
+              Write-Output "Health check attempt $attempt did not pass yet."
+            }
+            Start-Sleep -Seconds 10
+          }
+          throw 'The deployed health endpoint did not return HTTP 200.'
