@@ -38,7 +38,8 @@ export default defineConfig({
       stderr: 'pipe',
     },
     {
-      command: 'pnpm run dev -- --host 127.0.0.1',
+      // Bind IPv4 explicitly so Playwright's 127.0.0.1 readiness probe reaches Vite.
+      command: 'pnpm exec vite --host 127.0.0.1',
       cwd: frontendDirectory,
       url: 'http://127.0.0.1:5173',
       reuseExistingServer: !process.env.CI,
