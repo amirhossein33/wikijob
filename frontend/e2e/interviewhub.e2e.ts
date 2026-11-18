@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 
 const appUrl = process.env.E2E_BASE_URL || 'http://127.0.0.1:5173'
 const adminUsername = process.env.E2E_ADMIN_USERNAME || 'e2e-admin'
@@ -69,6 +69,14 @@ async function openAdminPendingQueue(page: Page) {
 
 async function publicApi(page: Page, path: string) {
   return page.request.get(new URL(path, appUrl).toString())
+}
+
+async function clickAndAcceptDialog(page: Page, button: Locator) {
+  // Accept the browser confirmation while the click is pending so it cannot block.
+  await Promise.all([
+    page.waitForEvent('dialog').then((dialog) => dialog.accept()),
+    button.click(),
+  ])
 }
 
 test('Candidate submits, receives a reasoned rejection, edits, gets approval, then deletes the experience', async ({
@@ -168,9 +176,10 @@ test('Candidate submits, receives a reasoned rejection, edits, gets approval, th
   await loginThroughUi(page, candidate)
   ownedExperience = page.locator('.owner-record').filter({ hasText: company })
   await expect(ownedExperience).toContainText('منتشرشده')
-  const deleteDialog = page.waitForEvent('dialog')
-  await ownedExperience.getByRole('button', { name: 'حذف' }).click()
-  await (await deleteDialog).accept()
+  await clickAndAcceptDialog(
+    page,
+    ownedExperience.getByRole('button', { name: 'حذف' }),
+  )
   await expect(ownedExperience).toContainText('حذف‌شده')
   expect(
     (
@@ -219,7 +228,7 @@ test('Interviewer publishes anonymous feedback and advice, manages both, and kee
   await page.getByRole('link', { name: interviewer.userName }).click()
   await page.getByRole('link', { name: 'ثبت دیدگاه مصاحبه‌کننده' }).click()
   await page.getByLabel('نام مصاحبه‌کننده').fill('Hidden Interviewer')
-  await page.getByLabel('نام شرکت').fill(company)
+  await page.getByRole('textbox', { name: 'نام شرکت' }).fill(company)
   await page
     .getByLabel('تجربه و ارزیابی مصاحبه')
     .fill('The candidate explained system trade-offs clearly.')
@@ -305,13 +314,15 @@ test('Interviewer publishes anonymous feedback and advice, manages both, and kee
   await logoutThroughUi(page)
   await loginThroughUi(page, interviewer)
   ownedFeedback = page.locator('.owner-record').filter({ hasText: company })
-  const feedbackDeleteDialog = page.waitForEvent('dialog')
-  await ownedFeedback.getByRole('button', { name: 'حذف' }).click()
-  await (await feedbackDeleteDialog).accept()
+  await clickAndAcceptDialog(
+    page,
+    ownedFeedback.getByRole('button', { name: 'حذف' }),
+  )
   await expect(ownedFeedback).toContainText('حذف‌شده')
-  const adviceDeleteDialog = page.waitForEvent('dialog')
-  await page.getByRole('button', { name: 'حذف توصیه‌ها' }).click()
-  await (await adviceDeleteDialog).accept()
+  await clickAndAcceptDialog(
+    page,
+    page.getByRole('button', { name: 'حذف توصیه‌ها' }),
+  )
   await expect(page.getByRole('link', { name: 'ثبت توصیه' })).toBeVisible()
   expect(
     (
